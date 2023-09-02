@@ -8,13 +8,12 @@ const solveButton = document.querySelector("[data-solve]")
 const input = document.getElementById("equation")
 const outputElement = document.getElementById("results")
 
+const PARENTHESIS_REGX = /\((?<equation>[^\(\)]*)\)/
 const MULTIPLY_DIVIDE_REGX =
 	/(?<operand1>\S+)\s*(?<operation>[\/\*])\s*(?<operand2>\S+)/
-const ADD_SUBTRACT_REGEX =
-	/(?<operand1>\S+)\s*(?<operation>(?<!e)[\-\+])\s*(?<operand2>\S+)/
-
 const EXPONENT_REGX = /(?<operand1>\S+)\s*(?<operation>\^)\s*(?<operand2>\S+)/
-
+const ADD_SUBTRACT_REGX =
+	/(?<operand1>\S+)\s*(?<operation>(?<!e)[\-\+])\s*(?<operand2>\S+)/
 
 solveButton.addEventListener("click", (e) => {
 	e.preventDefault()
@@ -31,9 +30,9 @@ function parse(equation) {
 		const result = handleMath(equation.match(MULTIPLY_DIVIDE_REGX).groups)
 		const newEquation = equation.replace(MULTIPLY_DIVIDE_REGX, result)
 		return parse(newEquation) //recursive function
-	} else if (equation.match(ADD_SUBTRACT_REGEX)) {
-		const result = handleMath(equation.match(ADD_SUBTRACT_REGEX).groups)
-		const newEquation = equation.replace(ADD_SUBTRACT_REGEX, result)
+	} else if (equation.match(ADD_SUBTRACT_REGX)) {
+		const result = handleMath(equation.match(ADD_SUBTRACT_REGX).groups)
+		const newEquation = equation.replace(ADD_SUBTRACT_REGX, result)
 		return parse(newEquation) //recursive function
 	} else {
 		return parseFloat(equation)
