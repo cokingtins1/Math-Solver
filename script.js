@@ -22,7 +22,12 @@ solveButton.addEventListener("click", (e) => {
 })
 
 function parse(equation) {
-	if (equation.match(EXPONENT_REGX)) {
+	if (equation.match(PARENTHESIS_REGX)) {
+		const subEquation = equation.match(PARENTHESIS_REGX).groups.equation
+		const result = parse(subEquation)
+		const newEquation = equation.replace(PARENTHESIS_REGX, result)
+		return parse(newEquation)
+	} else if (equation.match(EXPONENT_REGX)) {
 		const result = handleMath(equation.match(EXPONENT_REGX).groups)
 		const newEquation = equation.replace(EXPONENT_REGX, result)
 		return parse(newEquation) //recursive function
